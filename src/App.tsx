@@ -6,7 +6,12 @@ function App() {
             <Container>
                 <Head>
                     <HeadLeft>HeadLeft</HeadLeft>
-                    <HeadCenter>HeadCenter</HeadCenter>
+                    <HeadCenter>
+                        <MainTitle>민</MainTitle>
+                        <MainTitle>재</MainTitle>
+                        <MainTitle>일</MainTitle>
+                        <MainTitle>보</MainTitle>
+                    </HeadCenter>
                     <HeadRight>HeadRight</HeadRight>
                 </Head>
                 <Body>
@@ -19,10 +24,14 @@ function App() {
         </Wrapper>
     );
 }
+
 const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     background-color: #b1ac88;
+
+    font-family: "Chosun-light";
+    font-size: 14px;
 `;
 const Container = styled.div`
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.251);
@@ -49,6 +58,10 @@ const HeadLeft = styled(Side)`
 const HeadCenter = styled(Center)`
     display: flex;
     justify-content: center;
+    font-family: "ChosunLo", serif;
+    font-size: 60px;
+    border-left: solid 1px;
+    border-right: solid 1px;
 `;
 const HeadRight = styled(Side)`
     display: flex;
@@ -58,8 +71,7 @@ const Body = styled.div`
     margin: 10px 0px;
     display: flex;
 `;
-const BodyLeft = styled(Side)`
-`;
+const BodyLeft = styled(Side)``;
 const BodyCenter = styled(Center)`
     border-left: solid 1px;
     border-right: solid 1px;
@@ -70,5 +82,12 @@ const BodyRight = styled(Side)`
 const Foot = styled.div`
     display: flex;
     justify-content: center;
+`;
+const MainTitle = styled.span`
+    transform: translateY(0);
+    transition: 0.15s ease-in-out;
+    &:hover {
+        transform: translateY(-10px);
+    }
 `;
 export default App;

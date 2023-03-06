@@ -1,11 +1,41 @@
 import styled from "styled-components";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
+    const [today, setToday] = useState("");
+    const [weather, setWeather] = useState("");
+    const [visits, setVisits] = useState();
+
+    const getDay = () => {
+        const today = new Date();
+        const week = ["일", "월", "화", "수", "목", "금", "토"];
+
+        const todayYear = today.getFullYear();
+        const todayMonth = today.getMonth() + 1;
+        const todayDate = today.getDate();
+        const todayWeek = week[today.getDay()];
+
+        setToday(todayYear + "년 " + todayMonth + "월 " + todayDate + "일 " + todayWeek + "요일");
+    };
+
+    //count api 로 방문자 수 체크
+    const countVisit = async () => {
+        //https://api.countapi.xyz/set/angrymusic/visits?value=0  <-- 방문자수 0으로 초기화
+        await axios.get("https://api.countapi.xyz/hit/angrymusic/visits").then((res: any) => {
+            setVisits(res.data.value);
+        });
+    };
+    useEffect(() => {
+        getDay();
+        // countVisit();
+    }, []);
+
     return (
         <Wrapper className="App">
             <Container>
                 <Head>
-                    <HeadLeft>HeadLeft</HeadLeft>
+                    <HeadLeft>{today}</HeadLeft>
                     <HeadCenter>
                         <MainTitle>민</MainTitle>
                         <MainTitle>재</MainTitle>

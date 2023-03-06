@@ -6,6 +6,8 @@ function App() {
     const [today, setToday] = useState("");
     const [weather, setWeather] = useState("");
     const [visits, setVisits] = useState();
+    const [headline, setHeadline] = useState("");
+    const [typingEnd, setTypingEnd] = useState(false);
 
     const getDay = () => {
         const today = new Date();
@@ -26,9 +28,24 @@ function App() {
             setVisits(res.data.value);
         });
     };
+    const typing = (counter = 0) => {
+        const txt = "[속보] 프론트엔드 개발자 이민재 인터뷰 화제";
+        let tmp = "";
+        setInterval(() => {
+            if (txt.length === counter) {
+                setTypingEnd(true);
+                return;
+            }
+            tmp = tmp + txt[counter];
+            setHeadline(tmp);
+            counter++;
+        }, 80);
+    };
+
     useEffect(() => {
         getDay();
         // countVisit();
+        typing();
     }, []);
 
     return (
@@ -66,7 +83,7 @@ function App() {
                 </Head>
                 <Body>
                     <BodyLeft>BodyLeft</BodyLeft>
-                    <BodyCenter>BodyCenter</BodyCenter>
+                    <BodyCenter>{headline}</BodyCenter>
                     <BodyRight>BodyRight</BodyRight>
                 </Body>
                 <Foot>Foot</Foot>

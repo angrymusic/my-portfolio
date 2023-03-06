@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 import ChosunLo from "./ChosunLo.TTF";
 import ChosunSg from "./ChosunSg.TTF";
 import ChosunBg from "./ChosunBg.TTF";
-import Pacifico from "./Pacifico-Regular.TTF";
+import Caveat from "./Caveat-Bold.TTF";
 
 const GlobalFont = createGlobalStyle`
   @font-face {
@@ -18,8 +18,8 @@ const GlobalFont = createGlobalStyle`
     src: url(${ChosunBg}) format('truetype');
   }
   @font-face {
-    font-family: 'Pacifico';
-    src: url(${Pacifico}) format('truetype');
+    font-family: 'Caveat';
+    src: url(${Caveat}) format('truetype');
   }
 `;
 export default GlobalFont;

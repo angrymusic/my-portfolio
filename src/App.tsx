@@ -77,7 +77,7 @@ function App() {
             <Container>
                 <Head>
                     <HeadLeft>
-                        <MySign>angrymusic</MySign>
+                        <MySign>L M J</MySign>
                         {today} {weather}
                     </HeadLeft>
                     <HeadCenter>
@@ -88,6 +88,7 @@ function App() {
                     </HeadCenter>
                     <HeadRight>
                         <YCenter>
+                            &nbsp;
                             <LittleIcon src="./svg/githublogo.svg" alt="github icon" />
                             &nbsp;
                             <a target="_blank" rel="noreferrer" href="https://github.com/angrymusic">
@@ -95,6 +96,7 @@ function App() {
                             </a>
                         </YCenter>
                         <YCenter>
+                            &nbsp;
                             <LittleIcon src="../svg/notion.svg" alt="notion icon" />
                             &nbsp;
                             <a target="_blank" rel="noreferrer" href="https://angrymusic.notion.site/">
@@ -129,7 +131,10 @@ function App() {
                             크다고 생각하기 때문입니다.
                         </Answer>
                         <Question>현재는 어떤 일을 하고 계신가요?</Question>
-                        <Answer>대학생으로서의 마지막 순간을 음미하며 프론트엔드에 관한 것이라면 이것 저것 다 경험해보려고 노력하고 있습니다.</Answer>
+                        <Answer>
+                            대학생으로서의 마지막 순간을 음미하며 프론트엔드에 관한 것이라면 이것 저것 다 경험해보려고
+                            노력하고 있습니다.
+                        </Answer>
                         <Question>이때까지 경험해보신 기술들은 어떤게 있을까요?</Question>
                         <Answer>제가 사용해본 기술들은!</Answer>
                     </BodyCenter>
@@ -199,7 +204,7 @@ const Head = styled.div`
 `;
 const HeadLeft = styled(Side)`
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     flex-direction: column;
     text-align: center;
 `;
@@ -267,9 +272,12 @@ const Cursor = styled.span<{ typingEnd: boolean }>`
         }
     }};
 `;
-const MySign = styled.div`
+const MySign = styled(YCenter)`
+    flex-grow: 1;
+    display:flex;
+    justify-content:center;
     font-size: 36px;
-    font-family: "Pacifico";
+    font-family: "Caveat";
 `;
 const Question = styled.div`
     font-family: "ChosunBg";

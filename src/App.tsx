@@ -1,5 +1,6 @@
 import styled, { keyframes, css } from "styled-components";
 import { useState, useEffect } from "react";
+import { useMediaQuery } from "react-responsive";
 import axios from "axios";
 
 function App() {
@@ -8,6 +9,8 @@ function App() {
     const [visits, setVisits] = useState();
     const [headline, setHeadline] = useState("");
     const [typingEnd, setTypingEnd] = useState(false);
+
+    const isMobile = useMediaQuery({ maxDeviceWidth: 700 });
 
     const getDay = () => {
         const today = new Date();
@@ -69,7 +72,6 @@ function App() {
         countVisit();
         getWeather();
         typing();
-        console.log(typingEnd);
     }, []);
 
     return (
@@ -161,7 +163,6 @@ const blinkAnimation = keyframes`
 `;
 
 const Wrapper = styled.div`
-    overflow-x: hidden;
     background-color: #b1ac88;
     font-family: "Chosun-light";
     font-size: 14px;
@@ -274,8 +275,8 @@ const Cursor = styled.span<{ typingEnd: boolean }>`
 `;
 const MySign = styled(YCenter)`
     flex-grow: 1;
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
     font-size: 36px;
     font-family: "Caveat";
 `;

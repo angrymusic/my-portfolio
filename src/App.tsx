@@ -2,6 +2,8 @@ import styled, { keyframes, css } from "styled-components";
 import { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import axios from "axios";
+import man from "../src/image/man.jpg";
+import me from "../src/image/me.jpg";
 
 function App() {
     const [today, setToday] = useState("");
@@ -10,18 +12,12 @@ function App() {
     const [headline, setHeadline] = useState("");
     const [typingEnd, setTypingEnd] = useState(false);
     const [selectedBody, setSelectedBody] = useState(1);
+    const [isHoverImg, setIsHoverImg] = useState(false);
 
-    const isMobile = useMediaQuery({ query: "(max-width:767px)" });
+    const isMobile = useMediaQuery({ query: "(max-width:867px)" });
 
-    const changeBody = (e: any) => {
-        console.log(e.target.innerText);
-        if (e.target.innerText === "Profile") {
-            setSelectedBody(0);
-        } else if (e.target.innerText === "Interview") {
-            setSelectedBody(1);
-        } else {
-            setSelectedBody(2);
-        }
+    const changeBody = (num: number) => {
+        setSelectedBody(num);
     };
 
     const getDay = () => {
@@ -126,13 +122,30 @@ function App() {
                     </Head>
                     {isMobile && (
                         <BodyNav>
-                            <div onClick={changeBody}>Profile</div>
-                            <div onClick={changeBody}>Interview</div>
-                            <div onClick={changeBody}>History</div>
+                            <NavItem onClick={() => changeBody(0)}>Profile</NavItem>
+                            <NavItem onClick={() => changeBody(1)}>Interview</NavItem>
+                            <NavItem onClick={() => changeBody(2)}>History</NavItem>
                         </BodyNav>
                     )}
                     <Body>
-                        {(selectedBody === 0 || !isMobile) && <BodyLeft isMobile={isMobile}>BodyLeft</BodyLeft>}
+                        {(selectedBody === 0 || !isMobile) && (
+                            <BodyLeft isMobile={isMobile}>
+                                {typingEnd && (
+                                    <Smooth>
+                                        <ProfileImg
+                                            img={me}
+                                            src={isHoverImg ? man : me}
+                                            alt="profile img"
+                                            onMouseOver={() => setIsHoverImg(true)}
+                                            onMouseOut={() => setIsHoverImg(false)}
+                                        />
+                                        <div>👶 99.05.12</div>
+                                        <div>😍 노래, 풋살, 고기</div>
+                                        <div>😫 미세먼지</div>
+                                    </Smooth>
+                                )}
+                            </BodyLeft>
+                        )}
                         {(selectedBody === 1 || !isMobile) && (
                             <BodyCenter isMobile={isMobile}>
                                 <Headline>
@@ -143,7 +156,7 @@ function App() {
                                     <Smooth>
                                         <Question>본인 소개 먼저 해주실까요?</Question>
                                         <Answer>
-                                            안녕하세요 저는 프론트엔드 직군으로 시작한 신입 개발자 이민재라고 합니다.
+                                            안녕하세요! 저는 프론트엔드 직군으로 시작한 신입 개발자 이민재라고 합니다.
                                         </Answer>
                                         <Question>프론트엔드로 개발을 시작한 이유가 무엇인가요?</Question>
                                         <Answer>
@@ -159,8 +172,8 @@ function App() {
                                         </Answer>
                                         <Question>현재는 어떤 일을 하고 계신가요?</Question>
                                         <Answer>
-                                            대학생으로서의 마지막 순간을 음미하며 프론트엔드에 관한 것이라면 이것 저것
-                                            다 경험해보려고 노력하고 있습니다.
+                                            대학생으로서의 마지막 순간을 음미하며 개발에 관한 것이라면 이것 저것 다
+                                            경험해보려고 노력하고 있습니다.
                                         </Answer>
                                         <Question>이때까지 경험해보신 기술들은 어떤게 있을까요?</Question>
                                         <Answer>제가 사용해본 기술들은!</Answer>
@@ -232,8 +245,8 @@ const Container = styled.div`
 `;
 const Side = styled.div`
     flex: 2;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
 `;
 const Center = styled.div`
     flex: 6;
@@ -289,7 +302,10 @@ const Body = styled.div`
     margin: 10px 0px;
     display: flex;
 `;
-const BodyLeft = styled(Side)<{ isMobile: boolean }>``;
+const BodyLeft = styled(Side)<{ isMobile: boolean }>`
+    display: flex;
+    flex-direction: column;
+`;
 const BodyCenter = styled(Center)<{ isMobile: boolean }>`
     min-height: 80vh;
     ${(props) => {
@@ -326,7 +342,8 @@ const YCenter = styled.div`
 const Headline = styled.div`
     font-size: 36px;
     font-family: "ChosunBg";
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 `;
 const Cursor = styled.span<{ typingEnd: boolean }>`
     animation: ${(props) => {
@@ -353,4 +370,21 @@ const Question = styled.div`
     font-size: 18px;
 `;
 const Answer = styled.p``;
+const NavItem = styled.div`
+    flex: 1;
+    text-align: center;
+    padding: 2px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    &:hover {
+        color: white;
+        background-color: #494737;
+    }
+`;
+const ProfileImg = styled.img<{ img: string }>`
+    border: 1px solid black;
+    margin: 5px auto 10px;
+    width: 95%;
+    max-width: 500px;
+`;
 export default App;

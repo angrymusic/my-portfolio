@@ -16,10 +16,6 @@ function App() {
 
     const isMobile = useMediaQuery({ query: "(max-width:867px)" });
 
-    const changeBody = (num: number) => {
-        setSelectedBody(num);
-    };
-
     const getDay = () => {
         const today = new Date();
         const week = ["일", "월", "화", "수", "목", "금", "토"];
@@ -122,16 +118,16 @@ function App() {
                     </Head>
                     {isMobile && (
                         <BodyNav>
-                            <NavItem onClick={() => changeBody(0)}>Profile</NavItem>
-                            <NavItem onClick={() => changeBody(1)}>Interview</NavItem>
-                            <NavItem onClick={() => changeBody(2)}>History</NavItem>
+                            <NavItem onClick={() => setSelectedBody(0)}>Profile</NavItem>
+                            <NavItem onClick={() => setSelectedBody(1)}>Interview</NavItem>
+                            <NavItem onClick={() => setSelectedBody(2)}>History</NavItem>
                         </BodyNav>
                     )}
                     <Body>
                         {(selectedBody === 0 || !isMobile) && (
                             <BodyLeft isMobile={isMobile}>
                                 {typingEnd && (
-                                    <Smooth>
+                                    <SmoothProfile>
                                         <ProfileImg
                                             img={me}
                                             src={isHoverImg ? man : me}
@@ -139,10 +135,14 @@ function App() {
                                             onMouseOver={() => setIsHoverImg(true)}
                                             onMouseOut={() => setIsHoverImg(false)}
                                         />
-                                        <div>👶 99.05.12</div>
-                                        <div>😍 노래, 풋살, 고기</div>
-                                        <div>😫 미세먼지</div>
-                                    </Smooth>
+                                        <ProfileItem>👶 99.05.12</ProfileItem>
+                                        <ProfileItem>😍 노래, 풋살, 고기</ProfileItem>
+                                        <ProfileItem>😫 미세먼지</ProfileItem>
+                                        <ProfileItem>
+                                            <FontBold>{visits}</FontBold> 번째로 민재일보를 읽어주셨네요! 방문에
+                                            감사드리며 오늘도 좋은 하루 보내길 바라요~😃
+                                        </ProfileItem>
+                                    </SmoothProfile>
                                 )}
                             </BodyLeft>
                         )}
@@ -177,6 +177,45 @@ function App() {
                                         </Answer>
                                         <Question>이때까지 경험해보신 기술들은 어떤게 있을까요?</Question>
                                         <Answer>제가 사용해본 기술들은!</Answer>
+                                        <SkillBox>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/html5logo.svg" alt="html5"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/css3logo.svg" alt="css3"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/javascriptlogo.svg" alt="js"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/typescriptlogo.svg" alt="ts"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/reactlogo.svg" alt="react"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/vuelogo.svg" alt="vue"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/quasarlogo.svg" alt="quasar"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/githublogo.svg" alt="github"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/gitlogo.svg" alt="git"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/dockerlogo.svg" alt="docker"></Logo>
+                                            </SkillBoxItem>
+
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/mysqllogo.svg" alt="mysql"></Logo>
+                                            </SkillBoxItem>
+                                            <SkillBoxItem isMobile={isMobile}>
+                                                <Logo src="./svg/expresslogo.svg" alt="express"></Logo>
+                                            </SkillBoxItem>
+                                        </SkillBox>
                                     </Smooth>
                                 )}
                             </BodyCenter>
@@ -249,9 +288,9 @@ const Side = styled.div`
     padding-right: 10px;
 `;
 const Center = styled.div`
-    flex: 6;
-    padding-left: 5px;
-    padding-right: 5px;
+    flex: 7;
+    padding-left: 10px;
+    padding-right: 10px;
 `;
 const Head = styled.div<{ isMobile: boolean }>`
     min-height: 84px;
@@ -386,5 +425,43 @@ const ProfileImg = styled.img<{ img: string }>`
     margin: 5px auto 10px;
     width: 95%;
     max-width: 500px;
+`;
+const SmoothProfile = styled(Smooth)`
+    display: flex;
+    flex-direction: column;
+`;
+const ProfileItem = styled.div`
+    margin-bottom: 5px;
+`;
+const FontBold = styled.span`
+    font-family: "ChosunBg";
+`;
+const SkillBox = styled.div`
+    display: flex;
+    flex-flow: row wrap;
+    background-color: #494737;
+    margin: 0 10px;
+    padding: 20px;
+    border-radius: 15px;
+`;
+
+const SkillBoxItem = styled.div<{ isMobile: boolean }>`
+    margin-bottom: 10px;
+    ${(props) => {
+        if (props.isMobile) {
+            return "flex: 0 0 25%;";
+        } else {
+            return "flex: 0 0 20%;";
+        }
+    }}
+`;
+const Logo = styled.img`
+    margin: 10px;
+
+    transform: scale(1);
+    transition: 0.15s ease-in-out;
+    &:hover {
+        transform: scale(1.2);
+    }
 `;
 export default App;

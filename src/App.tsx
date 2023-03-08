@@ -9,8 +9,20 @@ function App() {
     const [visits, setVisits] = useState();
     const [headline, setHeadline] = useState("");
     const [typingEnd, setTypingEnd] = useState(false);
+    const [selectedBody, setSelectedBody] = useState(1);
 
-    const isMobile = useMediaQuery({ maxDeviceWidth: 700 });
+    const isMobile = useMediaQuery({ query: "(max-width:767px)" });
+
+    const changeBody = (e: any) => {
+        console.log(e.target.innerText);
+        if (e.target.innerText === "Profile") {
+            setSelectedBody(0);
+        } else if (e.target.innerText === "Interview") {
+            setSelectedBody(1);
+        } else {
+            setSelectedBody(2);
+        }
+    };
 
     const getDay = () => {
         const today = new Date();
@@ -76,74 +88,91 @@ function App() {
 
     return (
         <Wrapper className="App">
-            <Container>
-                <Head>
-                    <HeadLeft>
-                        <MySign>L M J</MySign>
-                        {today} {weather}
-                    </HeadLeft>
-                    <HeadCenter>
-                        <MainTitle>민</MainTitle>
-                        <MainTitle>재</MainTitle>
-                        <MainTitle>일</MainTitle>
-                        <MainTitle>보</MainTitle>
-                    </HeadCenter>
-                    <HeadRight>
-                        <YCenter>
-                            &nbsp;
-                            <LittleIcon src="./svg/githublogo.svg" alt="github icon" />
-                            &nbsp;
-                            <a target="_blank" rel="noreferrer" href="https://github.com/angrymusic">
-                                GitHub
-                            </a>
-                        </YCenter>
-                        <YCenter>
-                            &nbsp;
-                            <LittleIcon src="../svg/notion.svg" alt="notion icon" />
-                            &nbsp;
-                            <a target="_blank" rel="noreferrer" href="https://angrymusic.notion.site/">
-                                Notion
-                            </a>
-                        </YCenter>
-                        <YCenter>
-                            📧&nbsp;
-                            <a href="mailto:angrymusic@naver.com">angrymusic@naver.com</a>
-                        </YCenter>
-                        <YCenter>💎 어제보다 더 채워져가는 중입니다.</YCenter>
-                    </HeadRight>
-                </Head>
-                <Body>
-                    <BodyLeft>BodyLeft</BodyLeft>
-                    <BodyCenter>
-                        <Headline>
-                            {headline}
-                            <Cursor typingEnd={typingEnd}>|</Cursor>
-                        </Headline>
-                        <Question>본인 소개 먼저 해주실까요?</Question>
-                        <Answer>안녕하세요 저는 프론트엔드 직군으로 시작한 신입 개발자 이민재라고 합니다.</Answer>
-                        <Question>프론트엔드로 개발을 시작한 이유가 무엇인가요?</Question>
-                        <Answer>
-                            우선 제가 개발자를 꿈꾸게 된 이유는 새로운 무언가를 창조할 수 있기 때문입니다.
-                            <br />
-                            나만의 무언가를 만들어낸다는 것 만큼 재밌고 자극적인 것은 없다고 생각합니다. 그리고 만든
-                            것을 바로 눈으로 볼 수 있다면 더 재밌어질 것입니다.
-                            <br />
-                            그래서 저는 웹 프론트엔드 개발자가 되기로 결심했습니다. 결과를 바로 볼 수도 있고 많은
-                            사람들에게 쉽게 노출될 수 있습니다. 그만큼 중요한 역할이 될 것이고 돌아오는 보람과 성취감도
-                            크다고 생각하기 때문입니다.
-                        </Answer>
-                        <Question>현재는 어떤 일을 하고 계신가요?</Question>
-                        <Answer>
-                            대학생으로서의 마지막 순간을 음미하며 프론트엔드에 관한 것이라면 이것 저것 다 경험해보려고
-                            노력하고 있습니다.
-                        </Answer>
-                        <Question>이때까지 경험해보신 기술들은 어떤게 있을까요?</Question>
-                        <Answer>제가 사용해본 기술들은!</Answer>
-                    </BodyCenter>
-                    <BodyRight>BodyRight</BodyRight>
-                </Body>
-                <Foot>Foot</Foot>
-            </Container>
+            <Smooth>
+                <Container>
+                    <Head isMobile={isMobile}>
+                        <HeadLeft>
+                            {!isMobile && <MySign>L M J</MySign>}
+                            {today} {weather}
+                        </HeadLeft>
+                        <HeadCenter isMobile={isMobile}>
+                            <MainTitle>민</MainTitle>
+                            <MainTitle>재</MainTitle>
+                            <MainTitle>일</MainTitle>
+                            <MainTitle>보</MainTitle>
+                        </HeadCenter>
+                        <HeadRight isMobile={isMobile}>
+                            <YCenter>
+                                &nbsp;
+                                <LittleIcon src="./svg/githublogo.svg" alt="github icon" />
+                                &nbsp;
+                                <a target="_blank" rel="noreferrer" href="https://github.com/angrymusic">
+                                    GitHub
+                                </a>
+                            </YCenter>
+                            <YCenter>
+                                &nbsp;
+                                <LittleIcon src="../svg/notion.svg" alt="notion icon" />
+                                &nbsp;
+                                <a target="_blank" rel="noreferrer" href="https://angrymusic.notion.site/">
+                                    Notion
+                                </a>
+                            </YCenter>
+                            <YCenter>
+                                📧&nbsp;
+                                <a href="mailto:angrymusic@naver.com">angrymusic@naver.com</a>
+                            </YCenter>
+                        </HeadRight>
+                    </Head>
+                    {isMobile && (
+                        <BodyNav>
+                            <div onClick={changeBody}>Profile</div>
+                            <div onClick={changeBody}>Interview</div>
+                            <div onClick={changeBody}>History</div>
+                        </BodyNav>
+                    )}
+                    <Body>
+                        {(selectedBody === 0 || !isMobile) && <BodyLeft isMobile={isMobile}>BodyLeft</BodyLeft>}
+                        {(selectedBody === 1 || !isMobile) && (
+                            <BodyCenter isMobile={isMobile}>
+                                <Headline>
+                                    {headline}
+                                    <Cursor typingEnd={typingEnd}>|</Cursor>
+                                </Headline>
+                                {typingEnd && (
+                                    <Smooth>
+                                        <Question>본인 소개 먼저 해주실까요?</Question>
+                                        <Answer>
+                                            안녕하세요 저는 프론트엔드 직군으로 시작한 신입 개발자 이민재라고 합니다.
+                                        </Answer>
+                                        <Question>프론트엔드로 개발을 시작한 이유가 무엇인가요?</Question>
+                                        <Answer>
+                                            우선 제가 개발자를 꿈꾸게 된 이유는 새로운 무언가를 창조할 수 있기
+                                            때문입니다.
+                                            <br />
+                                            나만의 무언가를 만들어낸다는 것 만큼 재밌고 자극적인 것은 없다고 생각합니다.
+                                            그리고 만든 것을 바로 눈으로 볼 수 있다면 더 재밌어질 것입니다.
+                                            <br />
+                                            그래서 저는 웹 프론트엔드 개발자가 되기로 결심했습니다. 결과를 바로 볼 수도
+                                            있고 많은 사람들에게 쉽게 노출될 수 있습니다. 그만큼 중요한 역할이 될 것이고
+                                            돌아오는 보람과 성취감도 크다고 생각하기 때문입니다.
+                                        </Answer>
+                                        <Question>현재는 어떤 일을 하고 계신가요?</Question>
+                                        <Answer>
+                                            대학생으로서의 마지막 순간을 음미하며 프론트엔드에 관한 것이라면 이것 저것
+                                            다 경험해보려고 노력하고 있습니다.
+                                        </Answer>
+                                        <Question>이때까지 경험해보신 기술들은 어떤게 있을까요?</Question>
+                                        <Answer>제가 사용해본 기술들은!</Answer>
+                                    </Smooth>
+                                )}
+                            </BodyCenter>
+                        )}
+                        {(selectedBody === 2 || !isMobile) && <BodyRight isMobile={isMobile}>BodyRight</BodyRight>}
+                    </Body>
+                    <Foot>Foot</Foot>
+                </Container>
+            </Smooth>
         </Wrapper>
     );
 }
@@ -162,6 +191,19 @@ const blinkAnimation = keyframes`
   }
 `;
 
+const smoothAnimation = keyframes`
+    0%{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    100%{
+        opacity:1;
+        transform:translateY(0px);
+    }
+`;
+const Smooth = styled.div`
+    animation: ${smoothAnimation} 1s;
+`;
 const Wrapper = styled.div`
     background-color: #b1ac88;
     font-family: "Chosun-light";
@@ -170,7 +212,7 @@ const Wrapper = styled.div`
     a {
         color: inherit;
         text-decoration: none;
-        background: linear-gradient(to right, rgba(255, 0, 0, 1), rgb(255, 0, 179), rgba(0, 100, 200, 1));
+        background: linear-gradient(to right, rgba(255, 0, 0, 1), rgb(255, 0, 179), rgba(255, 0, 0, 1));
         background-size: 0 1.5px;
         background-position: 0% 90%;
         background-repeat: no-repeat;
@@ -198,10 +240,14 @@ const Center = styled.div`
     padding-left: 5px;
     padding-right: 5px;
 `;
-const Head = styled.div`
+const Head = styled.div<{ isMobile: boolean }>`
+    min-height: 84px;
     border-bottom: double 3px;
     display: flex;
     padding-bottom: 10px;
+    ${(props) => {
+        if (props.isMobile) return "flex-direction: column;";
+    }}
 `;
 const HeadLeft = styled(Side)`
     display: flex;
@@ -209,30 +255,52 @@ const HeadLeft = styled(Side)`
     flex-direction: column;
     text-align: center;
 `;
-const HeadCenter = styled(Center)`
+const HeadCenter = styled(Center)<{ isMobile: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: "ChosunLo", serif;
     font-size: 60px;
-    border-left: solid 1px;
-    border-right: solid 1px;
+    ${(props) => {
+        if (props.isMobile) {
+            return "border: none;";
+        } else {
+            return "border-left: solid 1px; border-right: solid 1px;";
+        }
+    }}
 `;
-const HeadRight = styled(Side)`
+const HeadRight = styled(Side)<{ isMobile: boolean }>`
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    ${(props) => {
+        if (props.isMobile) {
+            return "flex-direction: row;";
+        } else {
+            return "flex-direction: column;";
+        }
+    }}
+`;
+const BodyNav = styled.div`
+    border-bottom: double 3px;
+    display: flex;
+    justify-content: space-around;
 `;
 const Body = styled.div`
     margin: 10px 0px;
     display: flex;
 `;
-const BodyLeft = styled(Side)``;
-const BodyCenter = styled(Center)`
-    border-left: solid 1px;
-    border-right: solid 1px;
+const BodyLeft = styled(Side)<{ isMobile: boolean }>``;
+const BodyCenter = styled(Center)<{ isMobile: boolean }>`
+    min-height: 80vh;
+    ${(props) => {
+        if (props.isMobile) {
+            return "border: none;";
+        } else {
+            return "border-left: solid 1px; border-right: solid 1px;";
+        }
+    }}
 `;
-const BodyRight = styled(Side)`
+const BodyRight = styled(Side)<{ isMobile: boolean }>`
     flex: 2;
 `;
 const Foot = styled.div`

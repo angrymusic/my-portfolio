@@ -1,5 +1,5 @@
 import styled, { keyframes, css } from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMediaQuery } from "react-responsive";
 import axios from "axios";
 import man from "../src/image/man.jpg";
@@ -13,8 +13,11 @@ function App() {
     const [typingEnd, setTypingEnd] = useState(false);
     const [selectedBody, setSelectedBody] = useState(1);
     const [isHoverImg, setIsHoverImg] = useState(false);
+    const [canDraw, setCanDraw] = useState(false);
 
     const isMobile = useMediaQuery({ query: "(max-width:867px)" });
+
+    const canvasRef = useRef(null);
 
     const getDay = () => {
         const today = new Date();
@@ -71,6 +74,80 @@ function App() {
         }, 80);
     };
 
+    let pos = {
+        drawable: false,
+        x: -1,
+        y: -1,
+    };
+
+    const setCanvas = () => {
+        if (canvasRef.current) {
+            const canvas: HTMLCanvasElement = canvasRef.current;
+            if (canvas) {
+                canvas.width = document.body.clientWidth - 20;
+                canvas.height = document.body.clientHeight;
+            }
+
+            const ctx = canvas?.getContext("2d");
+            const rect = canvas?.getBoundingClientRect(); // 터치 스크린
+            const drawStart = (e: any) => {
+                if (ctx) {
+                    ctx.lineWidth = 2;
+                    ctx.lineCap = "round";
+                    ctx.lineJoin = "round";
+                }
+                pos.drawable = true;
+                ctx?.beginPath();
+                pos.x = e.offsetX;
+                pos.y = e.offsetY;
+                ctx?.moveTo(pos.x, pos.y);
+            };
+            const touchStart = (e: any) => {
+                pos.drawable = true;
+                ctx?.beginPath();
+                pos.x = e.touches[0].pageX - rect.left;
+                pos.y = e.touches[0].pageY - rect.top;
+                ctx?.moveTo(pos.x, pos.y);
+            };
+            const draw = (e: any) => {
+                if (!pos.drawable) return;
+                ctx?.lineTo(e.offsetX, e.offsetY);
+                pos.x = e.offsetX;
+                pos.y = e.offsetY;
+                ctx?.stroke();
+            };
+            const touch = (e: any) => {
+                ctx?.lineTo(e.touches[0].pageX - rect.left, e.touches[0].pageY - rect.top);
+                pos.x = e.touches[0].pageX - rect.left;
+                pos.y = e.touches[0].pageY - rect.top;
+                ctx?.stroke();
+            };
+            const drawEnd = () => {
+                pos.drawable = false;
+                pos.x = -1;
+                pos.y = -1;
+            };
+
+            const exitCanvas = (e: any) => {
+                setCanDraw(false);
+            };
+
+            canvas.addEventListener("mousedown", drawStart);
+            canvas.addEventListener("mousemove", draw);
+            canvas.addEventListener("mouseup", drawEnd);
+            canvas.addEventListener("mouseout", drawEnd);
+            document.addEventListener("keydown", exitCanvas);
+
+            /// 터치 스크린
+            canvas.addEventListener("touchstart", touchStart);
+            canvas.addEventListener("touchmove", touch);
+            canvas.addEventListener("touchend", drawEnd);
+        }
+    };
+    useEffect(() => {
+        setCanvas();
+    }, [canDraw]);
+
     useEffect(() => {
         getDay();
         countVisit();
@@ -80,7 +157,14 @@ function App() {
 
     return (
         <Wrapper className="App">
+            {!isMobile && canDraw && <Canvas ref={canvasRef}></Canvas>}
             <Smooth>
+                {!isMobile && (
+                    <Pencil canDraw={canDraw} onClick={() => setCanDraw(true)}>
+                        <img src="./svg/pencil.svg" width="150" alt="" />
+                        Pick Me :)
+                    </Pencil>
+                )}
                 <Container>
                     <Head isMobile={isMobile}>
                         <HeadLeft>
@@ -139,8 +223,7 @@ function App() {
                                         <ProfileItem>😍 노래, 풋살, 고기</ProfileItem>
                                         <ProfileItem>😫 미세먼지</ProfileItem>
                                         <ProfileItem>
-                                            <FontBold>{visits}</FontBold> 번째로 민재일보를 읽어주셨네요! 방문에
-                                            감사드리며 오늘도 좋은 하루 보내길 바라요~😃
+                                            <FontBold>{visits}</FontBold> 번째로 민재일보를 읽어주셨네요! 오늘도 좋은 하루 보내길 바라요~😃
                                         </ProfileItem>
                                     </SmoothProfile>
                                 )}
@@ -176,7 +259,7 @@ function App() {
                                             경험해보려고 노력하고 있습니다.
                                         </Answer>
                                         <Question>이때까지 경험해보신 기술들은 어떤게 있을까요?</Question>
-                                        <Answer>제가 사용해본 기술들은!</Answer>
+                                        <Answer>제가 사용해본 기술들은 다음과 같습니다.</Answer>
                                         <SkillBox>
                                             <SkillBoxItem isMobile={isMobile}>
                                                 <Logo src="./svg/html5logo.svg" alt="html5"></Logo>
@@ -216,11 +299,13 @@ function App() {
                                                 <Logo src="./svg/expresslogo.svg" alt="express"></Logo>
                                             </SkillBoxItem>
                                         </SkillBox>
+                                        <br />
+                                        <Question></Question>
                                     </Smooth>
                                 )}
                             </BodyCenter>
                         )}
-                        {(selectedBody === 2 || !isMobile) && <BodyRight isMobile={isMobile}>BodyRight</BodyRight>}
+                        {(selectedBody === 2 || !isMobile) && <BodyRight isMobile={isMobile}></BodyRight>}
                     </Body>
                     <Foot>Foot</Foot>
                 </Container>
@@ -256,7 +341,29 @@ const smoothAnimation = keyframes`
 const Smooth = styled.div`
     animation: ${smoothAnimation} 1s;
 `;
+const Canvas = styled.canvas`
+    position: absolute;
+    z-index: 1;
+`;
+const Pencil = styled.div<{ canDraw: boolean }>`
+    ${(props) => {
+        if (props.canDraw) {
+            return "display: none;";
+        } else {
+            return "display: flex;";
+        }
+    }}
+    flex-direction: column;
+    font-family: "Caveat";
+    font-size: 16px;
+    position: absolute;
+    text-align: center;
+    top: 150px;
+    right: 15px;
+    transform: rotate(-30deg);
+`;
 const Wrapper = styled.div`
+    overflow-x: hidden;
     background-color: #b1ac88;
     font-family: "Chosun-light";
     font-size: 14px;

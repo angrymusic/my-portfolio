@@ -14,6 +14,7 @@ function App() {
     const [selectedBody, setSelectedBody] = useState(1);
     const [isHoverImg, setIsHoverImg] = useState(false);
     const [canDraw, setCanDraw] = useState(false);
+    const [isPopUp, setIsPopUp] = useState(false);
 
     const isMobile = useMediaQuery({ query: "(max-width:867px)" });
 
@@ -84,7 +85,7 @@ function App() {
         if (canvasRef.current) {
             const canvas: HTMLCanvasElement = canvasRef.current;
             if (canvas) {
-                canvas.width = document.body.clientWidth - 20;
+                canvas.width = document.body.clientWidth;
                 canvas.height = document.body.clientHeight;
             }
 
@@ -157,10 +158,32 @@ function App() {
 
     return (
         <Wrapper className="App">
+            {isPopUp && (
+                <Modal>
+                    <Popup>
+                        <FontBold>낙서를 그만 두시려면 esc를 눌러주세요!</FontBold>
+                        <br />
+                        <Button
+                            onClick={() => {
+                                setIsPopUp(false);
+                            }}
+                        >
+                            확인
+                        </Button>
+                    </Popup>
+                </Modal>
+            )}
+
             {!isMobile && canDraw && <Canvas ref={canvasRef}></Canvas>}
             <Smooth>
                 {!isMobile && (
-                    <Pencil canDraw={canDraw} onClick={() => setCanDraw(true)}>
+                    <Pencil
+                        canDraw={canDraw}
+                        onClick={() => {
+                            setCanDraw(true);
+                            setIsPopUp(true);
+                        }}
+                    >
                         <img src="./svg/pencil.svg" width="150" alt="" />
                         Pick Me :)
                     </Pencil>
@@ -204,7 +227,7 @@ function App() {
                         <BodyNav>
                             <NavItem onClick={() => setSelectedBody(0)}>Profile</NavItem>
                             <NavItem onClick={() => setSelectedBody(1)}>Interview</NavItem>
-                            <NavItem onClick={() => setSelectedBody(2)}>History</NavItem>
+                            <NavItem onClick={() => setSelectedBody(2)}>Project</NavItem>
                         </BodyNav>
                     )}
                     <Body>
@@ -223,7 +246,8 @@ function App() {
                                         <ProfileItem>😍 노래, 풋살, 고기</ProfileItem>
                                         <ProfileItem>😫 미세먼지</ProfileItem>
                                         <ProfileItem>
-                                            <FontBold>{visits}</FontBold> 번째로 민재일보를 읽어주셨네요! 오늘도 좋은 하루 보내길 바라요~😃
+                                            <FontBold>{visits}</FontBold> 번째로 민재일보를 읽어주셨네요! 오늘도 좋은
+                                            하루 보내길 바라요~😃
                                         </ProfileItem>
                                     </SmoothProfile>
                                 )}
@@ -300,7 +324,8 @@ function App() {
                                             </SkillBoxItem>
                                         </SkillBox>
                                         <br />
-                                        <Question></Question>
+                                        <Question>진행해본 프로젝트는 어떤게 있나요?</Question>
+                                        <Answer>우측 사이드바에서 확인하실 수 있습니다!</Answer>
                                     </Smooth>
                                 )}
                             </BodyCenter>
@@ -338,13 +363,59 @@ const smoothAnimation = keyframes`
         transform:translateY(0px);
     }
 `;
+const opacityAnimation = keyframes`
+    0%{
+        opacity:0;
+    }
+    100%{
+        opacity:1;
+    }
+`;
 const Smooth = styled.div`
     animation: ${smoothAnimation} 1s;
+`;
+const Modal = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5vw;
+    z-index: 2;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000078;
+    animation: ${opacityAnimation} 1s;
+`;
+const Popup = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #e7e7e7;
+    border-radius: 10px;
+    padding: 25px 20px;
+`;
+
+const Button = styled.div`
+    cursor: pointer;
+    width: 60px;
+    font-size: 18px;
+    text-align: center;
+    padding: 4px 0;
+    border-radius: 10px;
+    background-color: #595bfa;
+    color: white;
+    &:hover {
+        background-color: #4b4dcc;
+        color: white;
+    }
 `;
 const Canvas = styled.canvas`
     position: absolute;
     z-index: 1;
 `;
+
 const Pencil = styled.div<{ canDraw: boolean }>`
     ${(props) => {
         if (props.canDraw) {

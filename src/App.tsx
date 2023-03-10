@@ -436,20 +436,20 @@ const Pencil = styled.div<{ canDraw: boolean }>`
 const Wrapper = styled.div`
     overflow-x: hidden;
     background-color: #b1ac88;
-    font-family: "Chosun-light";
-    font-size: 14px;
+    font-family: "ChosunGu";
+    font-size: 15px;
     padding: 10px;
     a {
         color: inherit;
         text-decoration: none;
         background: linear-gradient(to right, rgba(255, 0, 0, 1), rgb(255, 0, 179), rgba(255, 0, 0, 1));
-        background-size: 0 1.5px;
+        background-size: 0 1.2px;
         background-position: 0% 90%;
         background-repeat: no-repeat;
         transition: background-size 300ms;
     }
     a:hover {
-        background-size: 100% 1.5px;
+        background-size: 100% 1.2px;
     }
 `;
 const Container = styled.div`
